@@ -1,11 +1,15 @@
 # Lossless File Compressor 
 
 C Implementation of a lossless file compression suite, using the Lempel-Ziv-Welch (LZW) algorithm, 
-with on-par or better compression performance than the `ncompress` utility. 
+with on-par or better compression performance than the native UNIX `compress` utility. 
 
-Benchmarks suggest that for small files, the compression ratio is about the same or slightly better while the compression time is a few percentage points slower.
+Benchmarks (See [Testing](##Testing)) suggest that for intermediate code sizes (`MAXBITS` = 11 to 13),
+this implementation achieves about 7-12% higher compression ratios at the expense of a significant increase in compression time.
 
-For large files, the compression ratio is around 20-30% better while the total time for compression and decompression tends to be significantly larger (2-5x).
+For smaller or much larger code sizes, the compression ratios are roughly on par as `compress`, 
+but still have a significant compute time penalty. 
+To guard against this time penalty, string table pruning only occurs for `MAXBITS > 10`, which reduces computation time in half.
+Based on this testing, the recommended (and default) setting for `MAXBITS` is 12.
 
 ##  Lempel-Ziv-Welch (LZW) Algorithm
 
@@ -47,4 +51,7 @@ To run the test yourself, execute the following command from the root of the rep
 ./tests/test_script.sh [[-m MAXBITS] [-d] [-b]]
 ```
 The `-d` flag sets `DBG=1` and the `-b` flag stops further tests after the first error. 
+
+The testing files come courtesy of the testing data for [Snappy](https://github.com/google/snappy), a compressor/decompressor from Google. 
+The files come from a variety of sources including the Canterbury Corpus.
 
