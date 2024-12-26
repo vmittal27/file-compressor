@@ -80,9 +80,9 @@ for filename in tests/test_cases/*; do
     else
         echo -e "\n$(basename "$filename") \033[1mStatus:\033[0m \033[1;31mFailure\033[0m\n"
         if [ "$break_on_error" = true ]; then
-            break
             rm "temp.CUSTOM.COMPRESS"
             rm "temp.CUSTOM.OUT"
+            break
         fi
     fi
     rm "temp.CUSTOM.COMPRESS"
@@ -99,5 +99,3 @@ echo -e "====================================="
 echo -e "\033[1mAccuracy\033[0m: $(echo "scale=4; $num_correct / $file_count * 100" | bc -q)%"
 echo -e "\033[1mAverage Compression Increase\033[0m: $(echo "scale=4; $total_compression_increase / $file_count * 100" | bc -q)%"
 echo -e "\033[1mAverage Time Increase\033[0m: $(echo "scale=4; $total_time_increase / $file_count * 100" | bc -q)%"
-
-make clean 1>/dev/null 2>/dev/null
