@@ -14,8 +14,12 @@ void decompress() {
     int cur_bits = 9;
     int cur_max = 1 << 9; 
 
-    // We first get the max bits and whether or not we prune.
+    // We first get the max bits.
     binary_read(stdin, &b_buf, &max_bits, 5);
+
+    /*Pruning only occurs when MAXBITS is greater than 10 to minimize compression time
+    on small string tables.*/
+    int prune = (max_bits > 10) ? 1 : 0;
 
     // Max size for the string table.
     int max_size = 1 << max_bits; 
@@ -38,7 +42,7 @@ void decompress() {
     This results in a while True loop with a break.*/
     while (1) { 
 
-        if (table->size >= table->max_size) {
+        if (prune && table->size >= table->max_size) {
             decompression_strtable *pruned_table = decompression_strtable_prune(table);
             decompression_strtable *original = table;
             table = pruned_table;

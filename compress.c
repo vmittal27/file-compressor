@@ -8,6 +8,10 @@ void compress(int max_bits) {
 
     size_t max_size = 1 << max_bits; // Max size of string table.
 
+    /*Pruning only occurs when MAXBITS is greater than 10 to minimize compression time
+    on small string tables.*/
+    int prune = (max_bits > 10) ? 1 : 0;
+
     binaryio_buffer b_buf = {.buffer = 0, .size = 0}; 
     int cur_bits = 9; // How many bits we need to represent each code.
     int cur_max = 1 << cur_bits;
@@ -45,7 +49,7 @@ void compress(int max_bits) {
             binary_write(stdout, &b_buf, code, cur_bits, 0); 
 
             // If the table is full, we prune.
-            if (str_table->size >= str_table->max_size) {
+            if (prune && str_table->size >= str_table->max_size) {
                 compression_strtable *pruned_table = compression_strtable_prune(str_table);
                 compression_strtable *original = str_table;
                 compression_strtable_free(original);
