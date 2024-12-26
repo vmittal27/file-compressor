@@ -32,11 +32,15 @@ int main(int argc, char *argv[])
             switch (c) {
                 case 'm':
                     arg = atoi(optarg);
-                    if (MAX_BITS_LB <= arg && arg <= MAX_BITS_UB)
+                    if (MAX_BITS_LB <= arg && arg <= MAX_BITS_UB) {
                         max_bits = arg;
+                    }
+                    else {
+                        fprintf(stderr, "compress: MAXBITS must be between 9 and 20. Running with MAXBITS=12\n");
+                    }
                     break;
                 case '?':
-                    fprintf(stderr, "compress: unknown option or missing argument");
+                    fprintf(stderr, "compress: unknown option or missing argument\n");
                     exit(1); 
             }
         }
